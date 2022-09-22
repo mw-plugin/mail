@@ -28,8 +28,7 @@ Install_centos8()
   yum install sqlite -y
 
   # 安装postfix和postfix-sqlite
-  yum localinstall $pluginPath/rpm/postfix3-3.4.9-1.gf.el8.x86_64.rpm -y
-  yum localinstall $pluginPath/rpm/postfix3-sqlite-3.4.9-1.gf.el8.x86_64.rpm -y
+  # yum localinstall rpm/postfix3-3.4.9-1.gf.el8.x86_64.rpm -y
   if [[ ! -f "/usr/sbin/postfix" ]]; then
     yum install postfix -y
     yum install postfix-sqlite -y

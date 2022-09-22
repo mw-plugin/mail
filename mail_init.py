@@ -25,9 +25,10 @@ class mail_init:
         data['HostName'] = self.check_hostname()
         data['Postfix-install'] = {"status": True, "msg": "Postfix已经安装"} if os.path.exists(
             '/usr/sbin/postfix') else {"status": False, "msg": "Postfix未安装,请点击修复按钮"}
+        data['Postfix-Version'] = self.check_postfix_ver()
+
         data['Dovecot-install'] = {"status": True, "msg": "Deovecot已经安装"} if os.path.exists(
             '/usr/sbin/dovecot') or os.path.exists('/usr/local/opt/dovecot/sbin/dovecot') else {"status": False, "msg": "Dovecot未安装,请点击修复按钮"}
-        data['Postfix-Version'] = self.check_postfix_ver()
         data['Redis-install'] = {"status": True, "msg": "Redis已经安装"} if os.path.exists(
             mw.getServerDir() + '/redis/bin/redis-server') else {"status": False, "msg": "请到软件商店内安装Redis"}
         data['Redis-Passwd'] = self.check_redis_passwd(data['Redis-install'])

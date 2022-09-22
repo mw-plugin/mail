@@ -35,8 +35,19 @@ OSNAME=`cat ${rootPath}/data/osname.pl`
 OSNAME_ID=`cat /etc/*-release | grep VERSION_ID | awk -F = '{print $2}' | awk -F "\"" '{print $2}'`
 
 
+Install_rspamd() {
+  CODENAME=`lsb_release -c -s`
+  mkdir -p /etc/apt/keyrings
+  wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/rspamd.gpg > /dev/null
+  echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main" | tee /etc/apt/sources.list.d/rspamd.list
+  echo "deb-src [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main"  | tee -a /etc/apt/sources.list.d/rspamd.list
+  apt-get update
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get --no-install-recommends install rspamd -y
+}
+
 Install_debain(){
-		hostname=`hostname`
+	hostname=`hostname`
   	# 安装postfix和postfix-sqlite
   	debconf-set-selections <<< "postfix postfix/mailname string ${hostname}"
   	debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
@@ -52,7 +63,7 @@ Install_debain(){
 }
 
 Uninstall_debain(){
-		apt remove postfix postfix-sqlite -y && rm -rf /etc/postfix
+	apt remove postfix postfix-sqlite -y && rm -rf /etc/postfix
     dpkg -P postfix postfix-sqlite
     apt remove dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pop3d dovecot-sqlite dovecot-sieve -y
     dpkg -P dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pop3d dovecot-sqlite dovecot-sieve

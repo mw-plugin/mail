@@ -33,7 +33,7 @@ Install_centos8()
         yum install postfix -y
         yum install postfix-sqlite -y
     fi
-    
+
     # 安装dovecot和dovecot-sieve
     yum install dovecot-pigeonhole -y
     if [[ ! -f "/usr/sbin/dovecot" ]]; then
@@ -81,24 +81,6 @@ Install_centos7() {
     yum install rspamd -y
     yum install cyrus-sasl-plain -y
 
-}
-
-install_rspamd() {
-    if [ $OSNAME_ID = "8" ]; then
-        wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-8/rspamd.repo
-        rpm --import https://rspamd.com/rpm-stable/gpg.key
-        yum makecache
-        yum install rspamd -y
-    else
-        CODENAME=`lsb_release -c -s`
-        mkdir -p /etc/apt/keyrings
-        wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/rspamd.gpg > /dev/null
-        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main" | tee /etc/apt/sources.list.d/rspamd.list
-        echo "deb-src [arch=amd64 signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ $CODENAME main"  | tee -a /etc/apt/sources.list.d/rspamd.list
-        apt-get update
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get --no-install-recommends install rspamd -y
-    fi
 }
 
 Install_App() {

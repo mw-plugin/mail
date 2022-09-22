@@ -63,8 +63,13 @@ Install_centos7() {
     if [[ ! -f "/usr/sbin/dovecot" ]]; then
         yum install dovecot -y
     fi
+
     #安装rspamd
-    install_rspamd
+    wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-7/rspamd.repo
+    rpm --import https://rspamd.com/rpm-stable/gpg.key
+    yum makecache
+    yum install rspamd -y
+
     yum install cyrus-sasl-plain -y
 
 }

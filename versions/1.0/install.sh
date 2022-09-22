@@ -123,11 +123,11 @@ Uninstall_App()
 	runScript=$curPath/install_$OSNAME.sh
 	if [[ -f $runScript ]]; then
 		sh -x $runScript uninstall
-  	elif [[ $OSNAME = "debian" ]]; then
-    	Uninstall_debain
-  	else
-    	Uninstall_ubuntu
-  	fi
+	elif [[ $OSNAME = "debian" ]]; then
+	    Uninstall_debain
+	else
+	    Uninstall_ubuntu
+	fi
 
 	if [ -f $serverPath/mail/initd/mail ];then
 		$serverPath/mail/initd/mail stop

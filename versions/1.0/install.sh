@@ -76,7 +76,7 @@ Install_App()
 	mkdir -p $serverPath/source
 
 	runScript=$curPath/install_$OSNAME.sh
-
+	echo "runScript:"$runScript
 	if [[ -f $runScript ]]; then
 		sh -x $runScript install
   	elif [[ $OSNAME = "debian" ]]; then

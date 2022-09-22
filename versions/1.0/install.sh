@@ -10,6 +10,8 @@ serverPath=$(dirname "$rootPath")
 install_tmp=${rootPath}/tmp/mw_install.pl
 VERSION=$2
 
+echo "ver:$VERSION"
+
 cpu_arch=`arch`
 if [[ $cpu_arch != "x86_64" ]];then
   echo 'Does not support non-x86 system installation'

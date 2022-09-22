@@ -72,6 +72,8 @@ class mail_init:
 
 
 if __name__ == "__main__":
-    # python3 /www/server/mdserver-web/plugins/mail/mail_init.py
-    t = mail_init.mail_init().check_postfix_ver()
+    '''
+    cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/mail_init.py
+    '''
+    t = mail_init().check_postfix_ver()
     print(t)

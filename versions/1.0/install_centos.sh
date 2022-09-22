@@ -18,31 +18,36 @@ OSNAME_ID=`cat /etc/*-release | grep VERSION_ID | awk -F = '{print $2}' | awk -F
 
 Install_centos8()
 {
-  yum install epel-release -y
-  # 卸载系统自带的postfix
-  if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.9" ]];then
-    yum remove postfix -y
-    rm -rf /etc/postfix
-  fi
+    yum install epel-release -y
+    # 卸载系统自带的postfix
+    if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.9" ]];then
+        yum remove postfix -y
+        rm -rf /etc/postfix
+    fi
 
-  yum install sqlite -y
+    yum install sqlite -y
 
-  # 安装postfix和postfix-sqlite
-  # yum localinstall rpm/postfix3-3.4.9-1.gf.el8.x86_64.rpm -y
-  if [[ ! -f "/usr/sbin/postfix" ]]; then
-    yum install postfix -y
-    yum install postfix-sqlite -y
-  fi
-  # 安装dovecot和dovecot-sieve
-  yum install dovecot-pigeonhole -y
-  if [[ ! -f "/usr/sbin/dovecot" ]]; then
-    yum install dovecot -y
-  fi
-  # 安装opendkim
-#  安装rspamd
-                                          
-  install_rspamd
-  yum install cyrus-sasl-plain -y
+    # 安装postfix和postfix-sqlite
+    # yum localinstall rpm/postfix3-3.4.9-1.gf.el8.x86_64.rpm -y
+    if [[ ! -f "/usr/sbin/postfix" ]]; then
+        yum install postfix -y
+        yum install postfix-sqlite -y
+    fi
+    
+    # 安装dovecot和dovecot-sieve
+    yum install dovecot-pigeonhole -y
+    if [[ ! -f "/usr/sbin/dovecot" ]]; then
+        yum install dovecot -y
+    fi
+
+
+    # 安装rspamd                                     
+    wget -O /etc/yum.repos.d/rspamd.repo --no-check-certificate https://rspamd.com/rpm-stable/centos-8/rspamd.repo
+    rpm --import https://rspamd.com/rpm-stable/gpg.key
+    yum makecache
+
+    yum install rspamd -y
+    yum install cyrus-sasl-plain -y
 }
 
 Install_centos7() {
@@ -79,12 +84,7 @@ Install_centos7() {
 }
 
 install_rspamd() {
-    if [[ $OSNAME_ID = "7" ]];then
-        wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-7/rspamd.repo
-        rpm --import https://rspamd.com/rpm-stable/gpg.key
-        yum makecache
-        yum install rspamd -y
-    elif [ $OSNAME_ID = "8" ]; then
+    if [ $OSNAME_ID = "8" ]; then
         wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-8/rspamd.repo
         rpm --import https://rspamd.com/rpm-stable/gpg.key
         yum makecache

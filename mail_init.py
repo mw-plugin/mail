@@ -51,8 +51,9 @@ class mail_init:
                              '在ssh终端执行 \'hostnamectl set-hostname --static mail.example.com\''.format(hostname))
 
     def check_postfix_ver(self):
+        # |sed -r 's/.* ([0-9\.]+)$/\1/'
         postfix_version = mw.execShell(
-            "postconf mail_version|sed -r 's/.* ([0-9\.]+)$/\1/'")
+            "postconf mail_version")
         print(postfix_version)
         if postfix_version.startswith('3'):
             return mw.returnData(True, postfix_version)

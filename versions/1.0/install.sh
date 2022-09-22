@@ -48,7 +48,7 @@ Install_debain(){
 
   	apt install rspamd -y
 
-  	apt install cyrus-sasl-plain -y
+  	# apt install cyrus-sasl-plain -y
 }
 
 Uninstall_debain(){

@@ -65,8 +65,9 @@ Install_centos7() {
     fi
 
     #安装rspamd
+    yum install -y ca-certificates
     wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-7/rspamd.repo
-    rpm --import https://rspamd.com/rpm-stable/gpg.key
+    rpm --no-check-certificate --import https://rspamd.com/rpm-stable/gpg.key
     yum makecache
     yum install rspamd -y
 

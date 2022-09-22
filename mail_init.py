@@ -6,6 +6,8 @@ import os
 import time
 import re
 
+# https://www.freesion.com/article/6078447161/
+
 
 sys.path.append(os.getcwd() + "/class/core")
 

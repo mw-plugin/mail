@@ -54,7 +54,6 @@ class mail_init:
         # |sed -r 's/.* ([0-9\.]+)$/\1/'
         postfix_version = mw.execShell(
             "postconf mail_version | awk -F '=' '{print $2}'")[0].strip()
-        print(postfix_version)
         if postfix_version.startswith('3'):
             return mw.returnData(True, postfix_version)
         else:
@@ -75,6 +74,13 @@ class mail_init:
 
 if __name__ == "__main__":
     '''
+    cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/mail_init.py
+    '''
+
+    '''
+    cd /www/server/mdserver-web/plugins && \
+    rm -rf mail && git clone https://github.com/mw-plugin/mail && cd mail && rm -rf .git && \
+    cd /www/server/mdserver-web/plugins/mail && bash install.sh install 1.0 && \
     cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/mail_init.py
     '''
     t = mail_init().check_postfix_ver()

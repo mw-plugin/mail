@@ -74,8 +74,8 @@ Install_centos7() {
     rpm --import /tmp/gpg.key
     rm -rf /tmp/gpg.key
 
-    wget -O /tmp/cacert.pem http://curl.haxx.se/ca/cacert.pem
-    cat /tmp/cacert.pem > /etc/pki/tls/certs/ca-bundle.crt
+    # wget -O /tmp/cacert.pem http://curl.haxx.se/ca/cacert.pem
+    # cat /tmp/cacert.pem > /etc/pki/tls/certs/ca-bundle.crt
     
     yum makecache
     yum install rspamd -y

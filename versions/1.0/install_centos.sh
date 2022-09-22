@@ -65,12 +65,17 @@ Install_centos7() {
     fi
 
     #安装rspamd
+
+    rpm -Uvh https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/l/libunwind-1.3.1-3.el8.x86_64.rpm
     # --no-check-certificate
     yum install -y ca-certificates
     wget -O /etc/yum.repos.d/rspamd.repo https://rspamd.com/rpm-stable/centos-7/rspamd.repo
     wget -O /tmp/gpg.key --no-check-certificate https://rspamd.com/rpm-stable/gpg.key
     rpm --import /tmp/gpg.key
     rm -rf /tmp/gpg.key
+
+    wget -O /tmp/cacert.pem http://curl.haxx.se/ca/cacert.pem
+    cat /tmp/cacert.pem > /etc/pki/tls/certs/ca-bundle.crt
     
     yum makecache
     yum install rspamd -y

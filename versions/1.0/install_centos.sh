@@ -60,11 +60,13 @@ Install_centos7() {
         yum remove postfix -y
         rm -rf /etc/postfix
     fi
+
     # 安装postfix和postfix-sqlite
     if [[ ! -f /usr/sbin/postfix ]]; then
         yum install postfix -y
         yum install postfix-sqlite -y
     fi
+    
     # 安装dovecot和dovecot-sieve
     yum install dovecot-pigeonhole -y
     if [[ ! -f /usr/sbin/dovecot ]]; then

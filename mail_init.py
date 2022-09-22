@@ -69,3 +69,8 @@ class mail_init:
         if not mw.execShell('postconf -m | grep sqlite')[0].strip():
             return mw.returnData(False, "Postfix不支持Sqlite")
         return mw.returnData(True, "Postfix已支持Sqlite")
+
+
+if __name__ == "__main__":
+    t = mail_init.check_postfix_ver()
+    print(t)

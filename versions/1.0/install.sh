@@ -36,7 +36,7 @@ OSNAME_ID=`cat /etc/*-release | grep VERSION_ID | awk -F = '{print $2}' | awk -F
 
 
 Install_debain(){
-	hostname=`hostname`
+		hostname=`hostname`
   	# 安装postfix和postfix-sqlite
   	debconf-set-selections <<< "postfix postfix/mailname string ${hostname}"
   	debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
@@ -52,7 +52,7 @@ Install_debain(){
 }
 
 Uninstall_debain(){
-	apt remove postfix postfix-sqlite -y && rm -rf /etc/postfix
+		apt remove postfix postfix-sqlite -y && rm -rf /etc/postfix
     dpkg -P postfix postfix-sqlite
     apt remove dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pop3d dovecot-sqlite dovecot-sieve -y
     dpkg -P dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pop3d dovecot-sqlite dovecot-sieve

@@ -42,7 +42,6 @@ Install_debain(){
   	debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
   	apt install postfix -y
   	apt install postfix-sqlite -y
-  	apt install sqlite -y
 
   	# 安装dovecot和dovecot-sieve
   	apt install dovecot-core dovecot-pop3d dovecot-imapd dovecot-lmtpd dovecot-sqlite dovecot-sieve -y

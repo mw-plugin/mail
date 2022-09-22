@@ -74,7 +74,6 @@ Install_centos7() {
 
     yum makecache
     yum install rspamd -y
-
     yum install cyrus-sasl-plain -y
 
 }

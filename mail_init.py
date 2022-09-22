@@ -53,6 +53,7 @@ class mail_init:
     def check_postfix_ver(self):
         postfix_version = mw.execShell(
             "postconf mail_version|sed -r 's/.* ([0-9\.]+)$/\1/'")[0].strip()
+        print(postfix_version)
         if postfix_version.startswith('3'):
             return mw.returnData(True, postfix_version)
         else:

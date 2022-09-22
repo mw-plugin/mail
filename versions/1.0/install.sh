@@ -75,7 +75,7 @@ Install_App()
 	echo '正在安装脚本文件...' > $install_tmp
 	mkdir -p $serverPath/source
 
-	runScript=$curPath/install_$OSNAME.sh
+	runScript=$curPath/versions/$VERSION/install_$OSNAME.sh
 	echo "runScript:"$runScript
 	if [[ -f $runScript ]]; then
 		sh -x $runScript install

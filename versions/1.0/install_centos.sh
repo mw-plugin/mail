@@ -52,6 +52,8 @@ Install_centos8()
 
 Install_centos7() {
 
+    cp -rf $curPath/conf/centos7gf.repo /etc/yum.repos.d/
+
     yum install epel-release -y
     # 卸载系统自带的postfix
     if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.7" ]];then

@@ -8,9 +8,7 @@ rootPath=$(dirname "$rootPath")
 serverPath=$(dirname "$rootPath")
 
 install_tmp=${rootPath}/tmp/mw_install.pl
-VERSION=$2
-
-echo "ver:$VERSION"
+VERSION=1.0
 
 cpu_arch=`arch`
 if [[ $cpu_arch != "x86_64" ]];then

@@ -54,7 +54,7 @@ Install_centos7() {
 
     cp -rf $curPath/conf/centos7gf.repo /etc/yum.repos.d/
     yum makecache
-    
+
     yum install epel-release -y
     # 卸载系统自带的postfix
     if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.7" ]];then
@@ -64,9 +64,12 @@ Install_centos7() {
 
     # 安装postfix和postfix-sqlite
     if [[ ! -f /usr/sbin/postfix ]]; then
-        yum install postfix -y
-        yum install postfix-sqlite -y
+        yum install postfix3 -y
+        yum install postfix3-sqlite -y
     fi
+
+    inet_interfaces = localhost
+    sed -i 's/^inet_interfaces\ =\ localhost/inet_interfaces = all/g' /etc/postfix/main.cf
 
     # 安装dovecot和dovecot-sieve
     yum install dovecot-pigeonhole -y
@@ -74,7 +77,7 @@ Install_centos7() {
         yum install dovecot -y
     fi
 
-    #安装rspamd
+    # 安装rspamd
     yum install -y ca-certificates
     wget -O /etc/yum.repos.d/rspamd.repo --no-check-certificate https://rspamd.com/rpm-stable/centos-7/rspamd.repo
     rpm --import https://rspamd.com/rpm-stable/gpg.key

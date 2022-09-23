@@ -29,7 +29,11 @@ class mail_init:
             content += '\n'
         mw.writeFile(self.logfile, content)
 
-    # 放行端口
+    def returnData(self, status, msg, data=None):
+        import json
+        data = mw.returnData(status, msg, data)
+        return json.loads(data)
+
     def __release_port(self, port):
         from collections import namedtuple
         try:
@@ -60,7 +64,7 @@ class mail_init:
         return data
 
     def setup_mail(self):
-        import json
+
         self.write_logs(
             '|-Set up the postfix service to listen to all network cards...')
         mw.execShell('postconf -e "inet_interfaces = all"')
@@ -167,7 +171,7 @@ postconf -e "message_size_limit = 102400000"
         restart_service_shell = 'systemctl enable postfix && systemctl restart postfix'
         self.write_logs('|-Restarting postfix service...')
         mw.execShell(restart_service_shell)
-        return mw.returnData(True, "配置成功！")
+        return self.returnData(True, "配置成功！")
 
     def conf_dovecot(self):
         '''
@@ -334,7 +338,7 @@ chmod +x /usr/lib/dovecot/sieve/sa-learn-ham.sh
 
     def check_sqlite(self):
         if not mw.execShell('postconf -m | grep sqlite')[0].strip():
-            return mw.returnData(False, "Postfix不支持Sqlite")
+            return self.returnData(False, "Postfix不支持Sqlite")
         return mw.returnData(True, "Postfix已支持Sqlite")
 
 

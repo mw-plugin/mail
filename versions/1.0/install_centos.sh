@@ -68,7 +68,7 @@ Install_centos7() {
         yum install postfix3-sqlite -y
     fi
 
-    inet_interfaces = localhost
+    # inet_interfaces = localhost
     sed -i 's/^inet_interfaces\ =\ localhost/inet_interfaces = all/g' /etc/postfix/main.cf
 
     # 安装dovecot和dovecot-sieve

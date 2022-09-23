@@ -478,6 +478,15 @@ class App:
             return mw.returnJson(True, "设置成功！")
         return mw.returnJson(False, "设置失败！")
 
+        # 安装并配置postfix, dovecot
+    def setup_mail(self):
+        '''
+        安装邮局系统主函数
+        :param args:
+        :return:
+        '''
+        return mi.mail_init().setup_mail()
+
 
 if __name__ == "__main__":
     func = sys.argv[1]

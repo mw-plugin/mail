@@ -168,12 +168,12 @@ postconf -e "message_size_limit = 102400000"
         if not result or not re.search(r"\n*query\s*=\s*", result):
             self.write_logs(
                 '|- Read file content {}: Failed'.format("/etc/postfix/sqlite_virtual_mailbox_maps.cf"))
-            return mw.returnJson(False, "获取邮局配置失败！")
+            return mw.returnData(False, "获取邮局配置失败！")
 
         restart_service_shell = 'systemctl enable postfix && systemctl restart postfix'
         self.write_logs('|-Restarting postfix service...')
         mw.execShell(restart_service_shell)
-        return self.returnData(True, "配置成功！")
+        return mw.returnData(True, "配置成功！")
 
     def conf_dovecot(self):
         '''

@@ -23,7 +23,7 @@ var mail  = {
         }, 200);
 
 
-        _this.check_mail_sys({
+        _this.check_mail({
             tips: '正在检查邮局服务是否正常,请稍后....',
             hostname: ''
         }, function (res) {
@@ -37,7 +37,7 @@ var mail  = {
                         layer.closeAll();
                     }
                 }, function (index) {
-                    _this.check_post_env('setup_mail_sys');
+                    _this.check_post_env('setup_mail');
                 }, function () {
                     layer.closeAll();
                 });
@@ -320,10 +320,10 @@ var mail  = {
     },
 
     // 获取邮箱服务是否正常_请求
-    check_mail_sys: function (obj, callback) {
+    check_mail: function (obj, callback) {
         this.send({
             tips: obj.tips,
-            method: 'check_mail_sys',
+            method: 'check_mail',
             data: {
                 hostname: obj.hostname
             },
@@ -387,7 +387,7 @@ var mail  = {
                     layer.msg('请修复好所有的异常再提交');
                 }else{
                     switch (name){
-                        case 'setup_mail_sys':
+                        case 'setup_mail':
                             _this.setup_mail_sys({tips:'正在初始化邮局...'},function(res){
                                 layer.close(layerE)
                                 layer.msg(res.msg,{icon:res.status?1:2});

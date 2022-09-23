@@ -27,7 +27,7 @@ class mail_init:
             mw.writeFile(self.logfile, '')
         if '\n' not in content:
             content += '\n'
-        mw.writeFile(self.logfile, content, 'a+')
+        mw.writeFile(self.logfile, content)
 
     # 放行端口
     def __release_port(self, port):

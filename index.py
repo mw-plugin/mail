@@ -32,6 +32,7 @@ import mail_init as mi
 class App:
     __setupPath = '/www/server/mail'
     __session_conf = __setupPath + '/session.json'
+    postfix_main_cf = "/etc/postfix/main.cf"
 
     _check_time = 86400
 

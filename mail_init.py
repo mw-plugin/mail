@@ -157,14 +157,14 @@ postconf -e "message_size_limit = 102400000"
 
         mail_dir = mw.getPluginDir() + '/mail'
         postfix_conf_shell = '''
-cat {mail_dir}/mail/conf/postfix/master.cf > /etc/postfix/master.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_catchall_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_catchall_maps.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_maps.cf /etc/postfix/sqlite_virtual_alias_domain_maps.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_maps.cf > /etc/postfix/sqlite_virtual_alias_maps.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_domains_maps.cf > /etc/postfix/sqlite_virtual_domains_maps.cf
-cat {mail_dir}/mail/conf/postfix/sqlite_virtual_mailbox_maps.cf > /etc/postfix/sqlite_virtual_mailbox_maps.cf
-cat {mail_dir}/mail/conf/postfix/rule.cf > /etc/postfix/rule.cf
+cat {mail_dir}/conf/postfix/master.cf > /etc/postfix/master.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_alias_domain_catchall_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_catchall_maps.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_alias_domain_maps.cf /etc/postfix/sqlite_virtual_alias_domain_maps.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_alias_maps.cf > /etc/postfix/sqlite_virtual_alias_maps.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_domains_maps.cf > /etc/postfix/sqlite_virtual_domains_maps.cf
+cat {mail_dir}/conf/postfix/sqlite_virtual_mailbox_maps.cf > /etc/postfix/sqlite_virtual_mailbox_maps.cf
+cat {mail_dir}/conf/postfix/rule.cf > /etc/postfix/rule.cf
 '''.format(mail_dir=mail_dir)
         data = mw.execShell(postfix_conf_shell)
         print(data)

@@ -388,7 +388,7 @@ var mail  = {
                 }else{
                     switch (name){
                         case 'setup_mail':
-                            _this.setup_mail_sys({tips:'正在初始化邮局...'},function(res){
+                            _this.setup_mail({tips:'正在初始化邮局...'},function(res){
                                 layer.close(layerE)
                                 layer.msg(res.msg,{icon:res.status?1:2});
                                 _this.create_domain_list();

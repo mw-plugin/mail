@@ -166,7 +166,8 @@ cat {mail_dir}/mail/conf/postfix/sqlite_virtual_domains_maps.cf > /etc/postfix/s
 cat {mail_dir}/mail/conf/postfix/sqlite_virtual_mailbox_maps.cf > /etc/postfix/sqlite_virtual_mailbox_maps.cf
 cat {mail_dir}/mail/conf/postfix/rule.cf > /etc/postfix/rule.cf
 '''.format(mail_dir=mail_dir)
-        mw.execShell(postfix_conf_shell)
+        data = mw.execShell(postfix_conf_shell)
+        print(data)
 
         result = mw.readFile("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
         if not result or not re.search(r"\n*query\s*=\s*", result):

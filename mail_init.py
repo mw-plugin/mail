@@ -155,10 +155,18 @@ postconf -e "message_size_limit = 102400000"
         mw.execShell(edit_postfix_conf_shell)
         self.write_logs('|-Downloading additional configuration files...')
 
-#         download_sql_conf_shell = '''
-
-# '''.format(download_conf_url=download_url, logfile=self.logfile)
-#         mw.execShell(download_sql_conf_shell)
+        mail_dir = mw.getPluginDir() + '/mail'
+        postfix_conf_shell = '''
+cat {mail_dir}/mail/conf/postfix/master.cf > /etc/postfix/master.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_catchall_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_catchall_maps.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf > /etc/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_domain_maps.cf /etc/postfix/sqlite_virtual_alias_domain_maps.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_alias_maps.cf > /etc/postfix/sqlite_virtual_alias_maps.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_domains_maps.cf > /etc/postfix/sqlite_virtual_domains_maps.cf
+cat {mail_dir}/mail/conf/postfix/sqlite_virtual_mailbox_maps.cf > /etc/postfix/sqlite_virtual_mailbox_maps.cf
+cat {mail_dir}/mail/conf/postfix/rule.cf > /etc/postfix/rule.cf
+'''.format(mail_dir=mail_dir)
+        mw.execShell(postfix_conf_shell)
 
         result = mw.readFile("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
         if not result or not re.search(r"\n*query\s*=\s*", result):

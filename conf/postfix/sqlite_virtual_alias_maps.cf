@@ -1,0 +1,2 @@
+dbpath = /www/vmail/postfixadmin.db
+query = SELECT goto FROM alias WHERE address='%s' AND active = 1

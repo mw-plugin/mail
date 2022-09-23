@@ -334,6 +334,20 @@ var mail  = {
         })
     },
 
+    // 获取安装邮局服务
+    setup_mail: function (obj, callback) {
+        this.send({
+            tips: obj.tips,
+            method: 'setup_mail',
+            data: {
+                hostname: obj.hostname
+            },
+            success: function (res) {
+                if (callback) callback(res);
+            }
+        })
+    },
+
     // 检查邮箱环境
     check_mail_env:function(callback){
         this.send({

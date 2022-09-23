@@ -43,12 +43,12 @@ var mail  = {
                 });
             } else {
                 // _this.create_domain_list();
-                $('.tasklist .tab-nav span:first').click(); // 初始化
-                _this.loadScript('/static/ckeditor/ckeditor.js', function () {
-                    CKEDITOR.replace('editor1', {
-                        customConfig: '/static/ckeditor/config.js?v1.0'
-                    })
-                });
+                // $('.tasklist .tab-nav span:first').click(); // 初始化
+                // _this.loadScript('/static/ckeditor/ckeditor.js', function () {
+                //     CKEDITOR.replace('editor1', {
+                //         customConfig: '/static/ckeditor/config.js?v1.0'
+                //     })
+                // });
             }
         });
 
@@ -403,9 +403,13 @@ var mail  = {
                     switch (name){
                         case 'setup_mail':
                             _this.setup_mail({tips:'正在初始化邮局...'},function(res){
-                                layer.close(layerE)
-                                layer.msg(res.msg,{icon:res.status?1:2});
-                                _this.create_domain_list();
+                                if (res.status){
+                                    layer.close(layerE);
+                                    layer.msg(res.msg,{icon:res.status?1:2});
+                                    _this.create_domain_list();
+                                } else{
+                                    layer.msg(res.msg,{icon:res.status?1:2});
+                                }
                             });
                             break;
                         case 'change_to_rspamd':

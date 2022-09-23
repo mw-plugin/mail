@@ -60,6 +60,7 @@ class mail_init:
         return data
 
     def setup_mail(self):
+        import json
         self.write_logs(
             '|-Set up the postfix service to listen to all network cards...')
         mw.execShell('postconf -e "inet_interfaces = all"')
@@ -70,7 +71,7 @@ class mail_init:
 
         conf_postfix_data = self.conf_postfix()
         print(conf_postfix_data)
-        print(conf_postfix_data['status'])
+        print(json.loads(conf_postfix_data))
         if not self.conf_postfix()['status']:
             return mw.returnJson(False, 'Postfix配置失败！')
         if not self.conf_dovecot():

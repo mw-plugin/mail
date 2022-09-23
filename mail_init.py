@@ -347,10 +347,15 @@ if __name__ == "__main__":
     '''
 
     '''
+
+
+    && bash install.sh install 1.0
+
+
     cd /www/server/mdserver-web/plugins && \
     rm -rf mail && git clone https://github.com/mw-plugin/mail && cd mail && rm -rf .git && \
-    cd /www/server/mdserver-web/plugins/mail && bash install.sh install 1.0 && \
+    cd /www/server/mdserver-web/plugins/mail  && \
     cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/mail_init.py
     '''
-    t = mail_init().check_postfix_ver()
+    t = mail_init().setup_mail()
     print(t)

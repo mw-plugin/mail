@@ -55,7 +55,7 @@ class App:
 
         return tmp
 
-    def check_mail_sys(self):
+    def check_mail(self):
         args = self.getArgs()
 
         if os.path.exists('/etc/postfix/sqlite_virtual_domains_maps.cf'):

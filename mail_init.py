@@ -149,17 +149,10 @@ postconf -e "message_size_limit = 102400000"
         mw.execShell(edit_postfix_conf_shell)
         self.write_logs('|-Downloading additional configuration files...')
 
-        download_sql_conf_shell = '''
-wget "{download_conf_url}/mail_sys/postfix/master.cf" -O /etc/postfix/master.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_alias_domain_catchall_maps.cf" -O /etc/postfix/sqlite_virtual_alias_domain_catchall_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf" -O /etc/postfix/sqlite_virtual_alias_domain_mailbox_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_alias_domain_maps.cf" -O /etc/postfix/sqlite_virtual_alias_domain_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_alias_maps.cf" -O /etc/postfix/sqlite_virtual_alias_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_domains_maps.cf" -O /etc/postfix/sqlite_virtual_domains_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/sqlite_virtual_mailbox_maps.cf" -O /etc/postfix/sqlite_virtual_mailbox_maps.cf -T 10 >> {logfile} 2>&1
-wget "{download_conf_url}/mail_sys/postfix/btrule.cf" -O /etc/postfix/btrule.cf -T 10 >> {logfile} 2>&1
-'''.format(download_conf_url=download_url, logfile=self.logfile)
-        mw.execShell(download_sql_conf_shell)
+#         download_sql_conf_shell = '''
+
+# '''.format(download_conf_url=download_url, logfile=self.logfile)
+#         mw.execShell(download_sql_conf_shell)
 
         result = mw.returnJson("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
         if not result or not re.search(r"\n*query\s*=\s*", result):

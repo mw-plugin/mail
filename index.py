@@ -74,13 +74,13 @@ class App:
                 mw.execShell(
                     '/sbin/postconf -e "mydestination =" && systemctl restart postfix')
             # 修改dovecot配置
-            dovecot_conf = public.readFile("/etc/dovecot/dovecot.conf")
+            dovecot_conf = mw.readFile("/etc/dovecot/dovecot.conf")
             if not dovecot_conf or not re.search(r"\n*protocol\s*imap", dovecot_conf):
                 return mw.returnJson(False, '配置dovecot失败')
             # 修复之前版本未安装opendkim的问题
             # if not (os.path.exists("/usr/sbin/opendkim") and os.path.exists("/etc/opendkim.conf") and os.path.exists("/etc/opendkim")):
             #     if not self.setup_opendkim():
-            # return public.returnMsg(False, 'Failed to configure opendkim 1')
+            # return mw.returnMsg(False, 'Failed to configure opendkim 1')
 
             return mw.returnJson(True, '邮局系统已经存在，重装之前请先卸载!')
         else:
@@ -158,7 +158,7 @@ class App:
             self._session[key] = {"status": 0, "v_time": now, "value": value}
             return False
         except:
-            # print(public.get_error_info())
+            # print(mw.get_error_info())
             self._session[key] = {"status": 0, "v_time": now,
                                   "value": "None of DNS query names exist:{}".format(domain)}
             return False
@@ -195,7 +195,7 @@ class App:
             self._session[key] = {"status": 0, "v_time": now, "value": value}
             return False
         except:
-            # print(public.get_error_info())
+            # print(mw.get_error_info())
             self._session[key] = {"status": 0, "v_time": now,
                                   "value": "None of DNS query spf exist:{}".format(domain)}
             return False
@@ -231,7 +231,7 @@ class App:
             self._session[key] = {"status": 0, "v_time": now, "value": value}
             return False
         except:
-            # print(public.get_error_info())
+            # print(mw.get_error_info())
             self._session[key] = {"status": 0, "v_time": now,
                                   "value": "None of DNS query names exist:{}".format(domain)}
             return False
@@ -267,7 +267,7 @@ class App:
             self._session[key] = {"status": 0, "v_time": now, "value": value}
             return False
         except:
-            # print(public.get_error_info())
+            # print(mw.get_error_info())
             self._session[key] = {"status": 0, "v_time": now,
                                   "value": "None of DNS query names exist:{}".format(domain)}
             return False

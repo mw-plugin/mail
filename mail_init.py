@@ -31,7 +31,6 @@ class mail_init:
         mw.writeFile(self.logfile, content)
 
     def returnData(self, status, msg, data=None):
-        import json
         data = mw.returnData(status, msg, data)
         return json.loads(data)
 

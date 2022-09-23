@@ -167,7 +167,6 @@ cat {mail_dir}/conf/postfix/sqlite_virtual_mailbox_maps.cf > /etc/postfix/sqlite
 cat {mail_dir}/conf/postfix/rule.cf > /etc/postfix/rule.cf
 '''.format(mail_dir=mail_dir)
         data = mw.execShell(postfix_conf_shell)
-        print(data)
 
         result = mw.readFile("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
         if not result or not re.search(r"\n*query\s*=\s*", result):
@@ -229,29 +228,32 @@ postconf -e "milter_default_action = accept"
 '''
         mw.execShell(edit_postfix_conf_shell)
         self.write_logs('|-Downloading additional configuration files...')
-        get_rspamd_conf_shell = """
-mkdir -p /usr/lib/dovecot/sieve
-wget -O /etc/rspamd/worker-normal.inc {download_conf_url}/mail_sys/rspamd/worker-normal.inc -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/worker-fuzzy.inc {download_conf_url}/mail_sys/rspamd/worker-fuzzy.inc -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/statistic.conf {download_conf_url}/mail_sys/rspamd/statistic.conf -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/local.d/worker-controller.inc {download_conf_url}/mail_sys/rspamd/worker-controller.inc -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/worker-proxy.inc {download_conf_url}/mail_sys/rspamd/worker-proxy.inc -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/local.d/dkim_signing.conf {download_conf_url}/mail_sys/rspamd/modules.d/dkim_signing_bt.conf -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/local.d/milter_headers.conf {download_conf_url}/mail_sys/rspamd/modules.d/milter_headers_bt.conf -T 5 >> {logfile} 2>&1
-wget -O /etc/rspamd/local.d/redis.conf {download_conf_url}/mail_sys/rspamd/modules.d/redis_bt.conf -T 5 >> {logfile} 2>&1
 
-wget -O /usr/lib/dovecot/sieve/report-ham.sieve {download_conf_url}/mail_sys/dovecot/lib/report-ham.sieve -T 5 >> {logfile} 2>&1
-wget -O /usr/lib/dovecot/sieve/report-spam.sieve {download_conf_url}/mail_sys/dovecot/lib/report-spam.sieve -T 5 >> {logfile} 2>&1
-wget -O /usr/lib/dovecot/sieve/spam-to-folder.sieve {download_conf_url}/mail_sys/dovecot/lib/spam-to-folder.sieve -T 5 >> {logfile} 2>&1
-wget -O /usr/lib/dovecot/sieve/sa-learn-spam.sh {download_conf_url}/mail_sys/dovecot/lib/sa-learn-spam.sh -T 5 >> {logfile} 2>&1
-wget -O /usr/lib/dovecot/sieve/sa-learn-ham.sh {download_conf_url}/mail_sys/dovecot/lib/sa-learn-ham.sh -T 5 >> {logfile} 2>&1
+        mail_dir = mw.getPluginDir() + '/mail'
+        rspamd_conf_shell = """
+cat {mail_dir}/rspamd/worker-normal.inc > /etc/rspamd/worker-normal.inc
+cat {mail_dir}/rspamd/worker-fuzzy.inc > /etc/rspamd/worker-fuzzy.inc
+cat {mail_dir}/rspamd/statistic.conf /etc/rspamd/statistic.conf
+cat {mail_dir}/rspamd/worker-controller.inc /etc/rspamd/local.d/worker-controller.inc
+cat {mail_dir}/rspamd/worker-proxy.inc /etc/rspamd/worker-proxy.inc 
+cat {mail_dir}/rspamd/modules.d/dkim_signing.conf  /etc/rspamd/local.d/dkim_signing.conf
+cat {mail_dir}/rspamd/modules.d/milter_headers.conf /etc/rspamd/local.d/milter_headers.conf 
+cat {mail_dir}/rspamd/modules.d/redis.conf  /etc/rspamd/local.d/redis.conf
+
+mkdir -p /usr/lib/dovecot/sieve
+
+cat {mail_dir}/dovecot/lib/report-ham.sieve > /usr/lib/dovecot/sieve/report-ham.sieve 
+cat {mail_dir}/dovecot/lib/report-spam.sieve > /usr/lib/dovecot/sieve/report-spam.sieve 
+cat {mail_dir}/dovecot/lib/spam-to-folder.sieve > /usr/lib/dovecot/sieve/spam-to-folder.sieve
+cat {mail_dir}/dovecot/lib/sa-learn-spam.sh > /usr/lib/dovecot/sieve/sa-learn-spam.sh
+cat {mail_dir}/dovecot/lib/sa-learn-ham.sh > /usr/lib/dovecot/sieve/sa-learn-ham.sh
 sievec /usr/lib/dovecot/sieve/spam-to-folder.sieve
 sievec /usr/lib/dovecot/sieve/report-spam.sieve
 sievec /usr/lib/dovecot/sieve/report-ham.sieve
 chmod +x /usr/lib/dovecot/sieve/sa-learn-spam.sh
 chmod +x /usr/lib/dovecot/sieve/sa-learn-ham.sh
-""".format(download_conf_url=download_url, logfile=self.logfile)
-        mw.execShell(get_rspamd_conf_shell)
+""".format(mail_dir=mail_dir)
+        mw.execShell(rspamd_conf_shell)
         # 生成web端管理密码
         self.write_logs('|-Generating rspamd management password...')
         passwd = mw.getRandomString(8)
@@ -261,7 +263,7 @@ chmod +x /usr/lib/dovecot/sieve/sa-learn-ham.sh
         worker_controller_path = '/etc/rspamd/local.d/worker-controller.inc'
         worker_controller = mw.readFile(worker_controller_path)
         if worker_controller:
-            if 'BT_PASSWORD' in worker_controller:
+            if 'MW_PASSWORD' in worker_controller:
                 worker_controller = worker_controller.replace('password = "MW_PASSWORD";',
                                                               'password = "{}";'.format(passwd_en))
                 mw.writeFile(worker_controller_path, worker_controller)
@@ -269,7 +271,7 @@ chmod +x /usr/lib/dovecot/sieve/sa-learn-ham.sh
         rspamd_redis_path = '/etc/rspamd/local.d/redis.conf'
         rspamd_redis = mw.readFile(rspamd_redis_path)
         if rspamd_redis:
-            if 'BT_REDIS_PASSWD' in rspamd_redis:
+            if 'MW_REDIS_PASSWD' in rspamd_redis:
                 rspamd_redis = rspamd_redis.replace('password = "MW_REDIS_PASSWD";',
                                                     'password = "{}";'.format(self.get_redis_passwd()))
                 mw.writeFile(rspamd_redis_path, rspamd_redis)

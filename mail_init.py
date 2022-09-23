@@ -75,12 +75,12 @@ class mail_init:
         self.prepare_work()
 
         if not self.conf_postfix()['status']:
-            return mw.returnJson(False, 'Postfix配置失败！')
+            return mw.returnJson(False, 'Postfix配置失败!')
         if not self.conf_dovecot():
-            return mw.returnJson(False, 'Dovecot配置失败！')
+            return mw.returnJson(False, 'Dovecot配置失败!')
 
-        if not self.conf_dovecot():
-            return mw.returnJson(False, 'Dovecot配置失败！')
+        if not self.setup_rspamd():
+            return mw.returnJson(False, 'Rspamd配置失败!')
 
         self.write_logs('|{}'.format("-" * 60))
         self.write_logs('|-Initialized successfully!')

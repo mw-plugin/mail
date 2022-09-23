@@ -70,7 +70,7 @@ class mail_init:
 
         conf_postfix_data = self.conf_postfix()
         print(conf_postfix_data)
-        print(conf_postfix_data['status'])
+        print(conf_postfix_data{'status'})
         if not self.conf_postfix()['status']:
             return mw.returnJson(False, 'Postfix配置失败！')
         if not self.conf_dovecot():

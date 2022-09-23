@@ -31,8 +31,10 @@ class mail_init:
         mw.writeFile(self.logfile, content)
 
     def returnData(self, status, msg, data=None):
-        data = mw.returnData(status, msg, data)
-        return json.loads(data)
+        _data = mw.returnData(status, msg, data)
+        d = json.loads(_data)
+        print('local:', d, d['status'])
+        return d
 
     def __release_port(self, port):
         from collections import namedtuple

@@ -154,7 +154,7 @@ postconf -e "message_size_limit = 102400000"
 # '''.format(download_conf_url=download_url, logfile=self.logfile)
 #         mw.execShell(download_sql_conf_shell)
 
-        result = mw.returnJson("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
+        result = mw.readFile("/etc/postfix/sqlite_virtual_mailbox_maps.cf")
         if not result or not re.search(r"\n*query\s*=\s*", result):
             self.write_logs(
                 '|- Read file content {}: Failed'.format("/etc/postfix/sqlite_virtual_mailbox_maps.cf"))

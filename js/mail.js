@@ -405,8 +405,9 @@ var mail  = {
                             _this.setup_mail({tips:'正在初始化邮局...'},function(res){
                                 if (res.status){
                                     layer.close(layerE);
-                                    layer.msg(res.msg,{icon:1});
-                                    _this.create_domain_list();
+                                    showMsg(res.msg,function(){
+                                        _this.create_domain_list();
+                                    },{icon:1},2000);
                                 } else{
                                     layer.msg(res.msg,{icon:2});
                                 }

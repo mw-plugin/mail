@@ -33,7 +33,6 @@ class mail_init:
     def returnData(self, status, msg, data=None):
         _data = mw.returnData(status, msg, data)
         d = json.loads(_data)
-        print('local:', d, d['status'])
         return d
 
     def __release_port(self, port):
@@ -75,9 +74,6 @@ class mail_init:
 
         self.prepare_work()
 
-        conf_postfix_data = self.conf_postfix()
-        print(conf_postfix_data)
-        print(json.loads(conf_postfix_data)['status'])
         if not self.conf_postfix()['status']:
             return mw.returnJson(False, 'Postfix配置失败！')
         if not self.conf_dovecot():

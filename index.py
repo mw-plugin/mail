@@ -548,10 +548,9 @@ domain {
         if not a_record.endswith(domain):
             return mw.returnJson(False, 'A记录 [{}] 不属于该域名'.format(a_record))
 
-        if not mw.isDebugMode():
-            check = self.__check_a(a_record)
-            if not check[0]:
-                return mw.returnJson(False, 'A记录解析失败<br>域名：{}<br>IP：{}'.format(a_record, check[1]['value']))
+        check = self.__check_a(a_record)
+        if not check[0]:
+            return mw.returnJson(False, 'A记录解析失败<br>域名：{}<br>IP：{}'.format(a_record, check[1]['value']))
 
         if self.M('domain').where("domain=?", (domain,)).count() > 0:
             return mw.returnJson(False, '该域名已存在')

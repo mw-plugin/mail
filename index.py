@@ -9,6 +9,11 @@ import socket
 
 from datetime import datetime
 
+sys.path.append(os.getcwd() + "/class/core")
+
+import mw
+
+
 try:
     import dns.resolver
 except:
@@ -19,9 +24,6 @@ except:
     import dns.resolver
 
 
-sys.path.append(os.getcwd() + "/class/core")
-
-import mw
 app_debug = False
 if mw.isAppleSystem():
     app_debug = True

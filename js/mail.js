@@ -439,6 +439,74 @@ var mail  = {
         })
     },
 
+    // 设置解析邮箱-方法
+    set_analysis_mail: function (dkim_value, dmarc_value, domain, hostname) {
+        var _this = this;
+        layer.open({
+            type: 1,
+            title: '【' + domain + '】添加记录值',
+            area: '750px;',
+            closeBtn: 2,
+            content: "<div class='bt-body divtable pd20'>\
+                <div class='bt_tips'>第一步:添加MX记录</div>\
+                <div class='bt_conter'>\
+                    <div class='bt_vice_tips'>登录域名服务商，添加记录类型为MX的记录，用于邮箱服务(解析MX记录之前要先解析A记录)</div>\
+                    <div class='bt_vice_conter'>\
+                        <table class='table table-hover'>\
+                            <thead><tr><th>记录类型</th><th>主机记录</th><th>记录值</th><th>MX优先级</th></tr></thead>\
+                            <tbody>\
+                              <tr><td>MX</td><td>@</td><td>" + hostname +
+                "</td><td>10</td></tr>\
+                            </tbody>\
+                        </table>\
+                    </div>\
+                </div>\
+                <div class='bt_tips'>第二步:添加TXT记录</div>\
+                <div class='bt_conter'>\
+                    <div class='bt_vice_tips'>添加记录类型为TXT的记录，用于邮箱反垃圾(请直接复制下列参数)</div>\
+                    <div class='bt_vice_conter'>\
+                        <table class='table table-hover'>\
+                            <thead><tr><th>记录类型</th><th>主机记录</th><th>记录值</th></tr></thead>\
+                            <tbody>\
+                              <tr><td>TXT</td><td>@</td><td>v=spf1 a mx ~all&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='v=spf1 a mx ~all'>( 复制 )</a>&nbsp;</td></tr>\
+                              <tr><td>TXT</td><td>default._domainkey</td><td><span style='width:150px;word-break:break-all;'>" +
+                dkim_value +
+                "</span>&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" +
+                dkim_value + "'>( 复制 )</a>&nbsp;</td></tr>\
+                              <tr><td>TXT</td><td>_dmarc</td><td>" + dmarc_value +
+                "&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" +
+                dmarc_value + "'>( 复制 )</a>&nbsp;</td></tr>\
+                            </tbody>\
+                        </table>\
+                    </div>\
+                </div>\
+                <div class='bt_center'><button class='btn btn-success btn-sm btn_set_analysis'>已设置，验证域名解析</button></div>\
+            </div>",
+            success: function (layers, index) {
+                var copyBtn = new ClipboardJS('.btn_copy');
+                copyBtn.on("success", function (e) {
+                    layer.msg('复制成功！', {
+                        icon: 1
+                    })
+                    e.clearSelection();
+                });
+                copyBtn.on("error", function (e) {
+                    layer.msg('复制失败，请手动复制文本！', {
+                        icon: 2
+                    })
+                });
+                $('.btn_set_analysis').click(function () {
+                    _this.delete_mx_txt_cache({
+                        domain: domain
+                    }, function (res) {
+                        _this.create_domain_list();
+                        layer.close(index);
+                    });
+                });
+            }
+        });
+    },
+
     //创建邮局环境列表
     create_post_env_table:function (callback){
         var _this = this;

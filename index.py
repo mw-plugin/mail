@@ -398,7 +398,7 @@ class App:
             del(session[dkim_key])
         if dmarc_key in session:
             del(session[dmarc_key])
-        mw.writeFile(self._session_conf, json.dumps(session))
+        mw.writeFile(self.__session_conf, json.dumps(session))
 
         return mw.returnJson(True, '删除域名({})在session中的缓存记录成功'.format(domain))
 

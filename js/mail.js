@@ -240,7 +240,7 @@ var mail  = {
             console.log(res);
             var _tbody = '',
             var rdata = res.data.data;
-            _this.domain_list = rdata
+            _this.domain_list = rdata;
             if (rdata.length > 0) {
                 for (var i = 0; i < rdata.length; i++) {
                     _tbody += '<tr>\

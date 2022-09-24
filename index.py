@@ -439,7 +439,6 @@ class App:
                 "_dmarc." + item['domain'], 'TXT')]["status"]
             item['a_status'] = self._session['{0}:{1}'.format(item['a_record'], 'A')][
                 "status"]
-            print(item)
         except:
             self.__gevent_jobs(item['domain'], item['a_record'])
             # self.get_record_in_cache(item)

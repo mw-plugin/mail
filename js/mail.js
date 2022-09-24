@@ -103,14 +103,14 @@ var mail  = {
                     <span class='tname'>邮箱域名</span>\
                     <div class='info-r c4'>\
                         <input class='bt-input-text mr5' type='text' name='domain'  " + (!type ? "readonly='readonly'" : "") +
-                "    value='" + obj.domain + "' placeholder='请输入域名，例如btmail.cn' style='width:320px;' />\
+                "    value='" + obj.domain + "' placeholder='请输入域名，例如demo.cn' style='width:320px;' />\
                     </div>\
                 </div>\
                 <div class='line'>\
                     <span class='tname'>A记录</span>\
                     <div class='info-r c4'>\
                         <input class='bt-input-text mr5' type='text' name='a_record'  " + (!type ? "readonly='readonly'" : "") +
-                "    value='" + obj.domain + "' placeholder='请输入A记录,例如:btmail.btmail.cn' style='width:320px;' />\
+                "    value='" + obj.domain + "' placeholder='请输入A记录,例如:mail.demo.cn' style='width:320px;' />\
                     </div>\
                 </div>\
                 <div class='line'>\

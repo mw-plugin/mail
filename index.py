@@ -225,7 +225,7 @@ class App:
                 for i in result.response.answer:
                     for j in i.items:
                         value += str(j).strip()
-            new_v = self._get_dkim_value(origin_domain)
+            new_v = self.__get_dkim_value(origin_domain)
             if new_v and new_v in value:
                 self._session[key] = {"status": 1,
                                       "v_time": now, "value": value}
@@ -363,7 +363,7 @@ class App:
                 item = self.get_record_in_cache(item)
 
             item['mx_record'] = item['a_record']
-            item['dkim_value'] = self._get_dkim_value(item['domain'])
+            item['dkim_value'] = self.__get_dkim_value(item['domain'])
             item['dmarc_value'] = 'v=DMARC1;p=quarantine;rua=mailto:admin@{0}'.format(item[
                                                                                       'domain'])
             # item['ssl_status'] = self._get_multiple_certificate_domain_status(item[

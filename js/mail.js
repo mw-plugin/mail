@@ -145,7 +145,12 @@ var mail  = {
                 }
                 if (type) {
                     _this.add_domain(_form, function (res) {
-                        console.log(res);
+                        if (!res.status){
+                            layer.msg(res.msg);
+                            return;
+                        }
+
+
                         _this.create_domain_list({
                             page: 1,
                             size: 10

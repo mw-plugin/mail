@@ -503,6 +503,20 @@ var mail  = {
         });
     },
 
+    //删除max记录和txt记录-请求
+    delete_mx_txt_cache: function (obj, callback) {
+        this.send({
+            tips: '正在清除MAX记录和TXT记录缓存，请稍候...',
+            method: 'delete_mx_txt_cache',
+            data: {
+                domain: obj.domain
+            },
+            success: function (res) {
+                if (callback) callback(res);
+            }
+        })
+    },
+
     //创建邮局环境列表
     create_post_env_table:function (callback){
         var _this = this;

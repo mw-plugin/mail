@@ -375,6 +375,29 @@ class App:
 
         return mw.returnJson(True, 'ok', {'data': data_list, 'page': data['page']})
 
+    # 获取SSL证书时间到期时间
+    def get_ssl_info(self, domain):
+        try:
+            import data
+            fullchain_file = '/www/server/mail/cert/{}/fullchain.pem'.format(
+                domain)
+            os.chown(fullchain_file, 0, 0)
+            os.chmod(fullchain_file, 0o600)
+            privkey_file = '/www/server/mail/cert/{}/privkey.pem'.format(
+                domain)
+            os.chown(privkey_file, 0, 0)
+            os.chmod(privkey_file, 0o600)
+            ssl_info = data.data().get_cert_end(fullchain_file)
+            if not ssl_info:
+                return {'dns': [domain]}
+            ssl_info['src'] = public.readFile(fullchain_file)
+            ssl_info['key'] = public.readFile(privkey_file)
+            ssl_info['endtime'] = int(
+                int(time.mktime(time.strptime(ssl_info['notAfter'], "%Y-%m-%d")) - time.time()) / 86400)
+            return ssl_info
+        except:
+            return {'dns': [domain]}
+
     def _get_catchall_status(self, domain):
         """
             @name 获取某个域名下catchall是否开启

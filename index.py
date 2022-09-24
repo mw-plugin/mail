@@ -375,6 +375,33 @@ class App:
 
         return mw.returnJson(True, 'ok', {'data': data_list, 'page': data['page']})
 
+    def delete_mx_txt_cache(self):
+        args = self.getArgs()
+
+        session = self.__get_session()
+        if 'domain' not in args:
+            return mw.returnJson(False, '请传入域名')
+
+        domain = args.domain
+
+        mx_key = '{0}:{1}'.format(domain, 'MX')
+        spf_key = '{0}:{1}'.format(domain, 'TXT')
+        dkim_key = '{0}:{1}'.format(
+            'default._domainkey.{0}'.format(domain), 'TXT')
+        dmarc_key = '{0}:{1}'.format('_dmarc.{0}'.format(domain), 'TXT')
+
+        if mx_key in session:
+            del(session[mx_key])
+        if spf_key in session:
+            del(session[spf_key])
+        if dkim_key in session:
+            del(session[dkim_key])
+        if dmarc_key in session:
+            del(session[dmarc_key])
+        mw.writeFile(self._session_conf, json.dumps(session))
+
+        return mw.returnJson(True, '删除域名({})在session中的缓存记录成功'.format(domain))
+
     # 获取SSL证书时间到期时间
     def get_ssl_info(self, domain):
         try:

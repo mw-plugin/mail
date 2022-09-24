@@ -238,7 +238,7 @@ var mail  = {
         var _this = this;
         this.get_domain_list(obj, function (res) {
             console.log(res);
-            var _tbody = '',
+            var _tbody = '';
             var rdata = res.data.data;
             _this.domain_list = rdata;
             if (rdata.length > 0) {

@@ -27,7 +27,6 @@ var mail  = {
             tips: '正在检查邮局服务是否正常,请稍后....',
             hostname: ''
         }, function (res) {
-            console.log("aaaa",res);
             if (res.status == false && res.msg == '之前没有安装过邮局系统，请放心安装!') {
                 layer.confirm('当前未设置邮局服务，是否现在设置?', {
                     icon: 0,
@@ -42,7 +41,7 @@ var mail  = {
                     layer.closeAll();
                 });
             } else {
-                // _this.create_domain_list();
+                _this.create_domain_list();
                 // $('.tasklist .tab-nav span:first').click(); // 初始化
                 // _this.loadScript('/static/ckeditor/ckeditor.js', function () {
                 //     CKEDITOR.replace('editor1', {

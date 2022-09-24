@@ -365,7 +365,7 @@ if __name__ == "__main__":
     cd /www/server/mdserver-web/plugins && \
     rm -rf mail && git clone https://github.com/mw-plugin/mail && cd mail && rm -rf .git && \
     cd /www/server/mdserver-web/plugins/mail  && \
-    cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/mail_init.py
+    cd /www/server/mdserver-web && python3 /www/server/mdserver-web/plugins/mail/index.py get_domains 1.0 {"p":1,"size":10}
     '''
     t = mail_init().setup_mail()
     print(t)

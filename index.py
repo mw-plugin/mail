@@ -465,14 +465,14 @@ domain {
         return True
 
     def set_rspamd_dkim_key(self, domain):
-        dkim_path = '/www/server/dkim/{}'.format(domain)
+        dkim_path = '/www/server/mail/dkim/{}'.format(domain)
         if not dkim_path:
             os.makedirs(dkim_path)
         if not os.path.exists('{}/default.pub'.format(dkim_path)):
             dkim_shell = """
     mkdir -p {dkim_path}
-    rspamadm dkim_keygen -s 'default' -b 1024 -d {domain} -k /www/server/dkim/{domain}/default.private > /www/server/dkim/{domain}/default.pub
-    chmod 755 -R /www/server/dkim/{domain}
+    rspamadm dkim_keygen -s 'default' -b 1024 -d {domain} -k /www/server/mail/dkim/{domain}/default.private > /www/server/mail/dkim/{domain}/default.pub
+    chmod 755 -R /www/server/mail/dkim/{domain}
     """.format(dkim_path=dkim_path, domain=domain)
             mw.execShell(dkim_shell)
         dkim_sign_content = self._build_dkim_sign_content(domain, dkim_path)

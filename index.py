@@ -103,15 +103,14 @@ class App:
         :param domain:
         :return:
         '''
-        if not os.path.exists("/www/server/dkim/{}".format(domain)):
-            os.makedirs("/www/server/dkim/{}".format(domain))
-        rspamd_pub_file = '/www/server/dkim/{}/default.pub'.format(domain)
+        if not os.path.exists("/www/server/mail/dkim/{}".format(domain)):
+            os.makedirs("/www/server/mail/dkim/{}".format(domain))
+        rspamd_pub_file = '/www/server/mail/dkim/{}/default.pub'.format(domain)
         opendkim_pub_file = '/etc/opendkim/keys/{0}/default.txt'.format(domain)
         if os.path.exists(opendkim_pub_file) and not os.path.exists(rspamd_pub_file):
             opendkim_pub = mw.readFile(opendkim_pub_file)
             mw.writeFile(rspamd_pub_file, opendkim_pub)
-
-            rspamd_pri_file = '/www/server/dkim/{}/default.private'.format(
+            rspamd_pri_file = '/www/server/mail/dkim/{}/default.private'.format(
                 domain)
             opendkim_pri_file = '/etc/opendkim/keys/{}/default.private'.format(
                 domain)
@@ -364,7 +363,7 @@ class App:
                 item = self.get_record_in_cache(item)
 
             item['mx_record'] = item['a_record']
-
+            item['dkim_value'] = self._get_dkim_value(item['domain'])
             item['dmarc_value'] = 'v=DMARC1;p=quarantine;rua=mailto:admin@{0}'.format(item[
                                                                                       'domain'])
             # item['ssl_status'] = self._get_multiple_certificate_domain_status(item[

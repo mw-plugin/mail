@@ -456,8 +456,7 @@ var mail  = {
                         <table class='table table-hover'>\
                             <thead><tr><th>记录类型</th><th>主机记录</th><th>记录值</th><th>MX优先级</th></tr></thead>\
                             <tbody>\
-                              <tr><td>MX</td><td>@</td><td>" + hostname +
-                "</td><td>10</td></tr>\
+                              <tr><td>MX</td><td>@</td><td>" + hostname + "</td><td>10</td></tr>\
                             </tbody>\
                         </table>\
                     </div>\
@@ -469,14 +468,10 @@ var mail  = {
                         <table class='table table-hover'>\
                             <thead><tr><th>记录类型</th><th>主机记录</th><th>记录值</th></tr></thead>\
                             <tbody>\
-                              <tr><td>TXT</td><td>@</td><td>v=spf1 a mx ~all&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='v=spf1 a mx ~all'>( 复制 )</a>&nbsp;</td></tr>\
-                              <tr><td>TXT</td><td>default._domainkey</td><td><span style='width:150px;word-break:break-all;'>" +
-                dkim_value +
-                "</span>&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" +
-                dkim_value + "'>( 复制 )</a>&nbsp;</td></tr>\
-                              <tr><td>TXT</td><td>_dmarc</td><td>" + dmarc_value +
-                "&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" +
-                dmarc_value + "'>( 复制 )</a>&nbsp;</td></tr>\
+                              <tr><td>TXT</td><td>@</td><td>v=spf1 a mx ~all&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='v=spf1 a mx ~all'>(复制)</a>&nbsp;</td></tr>\
+                              <tr><td>TXT</td><td>default._domainkey</td><td><span style='width:150px;word-break:break-all;'>" + dkim_value +
+                                "</span>&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" + dkim_value + "'>(复制)</a>&nbsp;</td></tr>\
+                              <tr><td>TXT</td><td>_dmarc</td><td>" + dmarc_value + "&nbsp;<a href='javascript:;' class='btlink btn_copy' data-clipboard-text='" +dmarc_value + "'>(复制)</a>&nbsp;</td></tr>\
                             </tbody>\
                         </table>\
                     </div>\

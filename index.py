@@ -382,7 +382,7 @@ class App:
         if 'domain' not in args:
             return mw.returnJson(False, '请传入域名')
 
-        domain = args.domain
+        domain = args['domain']
 
         mx_key = '{0}:{1}'.format(domain, 'MX')
         spf_key = '{0}:{1}'.format(domain, 'TXT')

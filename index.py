@@ -13,7 +13,7 @@ try:
     import dns.resolver
 except:
     if os.path.exists(os.getcwd() + '/bin'):
-        mw.mw(os.getcwd() + '/bin/pip install dnspython')
+        mw.execShell(os.getcwd() + '/bin/pip install dnspython')
     else:
         mw.execShell('pip install dnspython')
     import dns.resolver

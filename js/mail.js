@@ -296,6 +296,9 @@ var mail  = {
                 e.stopPropagation();
                 e.preventDefault();
             })
+
+
+
             $('#flush_domain_record').unbind().on('click',function(e){
                 _this.flush_domain_record('all',function(res){
                     layer.msg(res.msg, { icon: res.status ? 1 : 2 });
@@ -423,7 +426,7 @@ var mail  = {
                             _this.change_to_rspamd(function(res){
                                 layer.close(layerE)
                                 layer.msg(res.msg,{icon:res.status?1:2});
-                                _this.create_server_status_table()
+                                _this.create_server_status_table();
                             })
                             break;
                     }

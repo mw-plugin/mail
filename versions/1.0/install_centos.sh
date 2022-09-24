@@ -28,7 +28,6 @@ Install_centos8()
     yum install sqlite -y
 
     # 安装postfix和postfix-sqlite
-    # yum localinstall rpm/postfix3-3.4.9-1.gf.el8.x86_64.rpm -y
     if [[ ! -f "/usr/sbin/postfix" ]]; then
         yum install postfix -y
         yum install postfix-sqlite -y
@@ -57,13 +56,13 @@ Install_centos7() {
 
     yum install epel-release -y
     # 卸载系统自带的postfix
-    if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.7" ]];then
-        yum remove postfix -y
-        rm -rf /etc/postfix
-    fi
+    # if [[ $cpu_arch = "x86_64" && $postfixver != "3.4.7" ]];then
+    #     yum remove postfix -y
+    #     rm -rf /etc/postfix
+    # fi
 
     # 安装postfix和postfix-sqlite
-    if [[ ! -f /usr/sbin/postfix ]]; then
+    if [ ! -f /usr/sbin/postfix ]; then
         yum install postfix3 -y
         yum install postfix3-sqlite -y
     fi

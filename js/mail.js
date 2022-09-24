@@ -149,7 +149,6 @@ var mail  = {
                             return;
                         }
 
-
                         _this.create_domain_list({
                             page: 1,
                             size: 10
@@ -237,7 +236,10 @@ var mail  = {
         }
         var _this = this;
         this.get_domain_list(obj, function (res) {
-            console.log(res);
+            if (!res.status){
+                layer.msg(res.msg,{icon:2});
+            }
+
             var _tbody = '';
             var rdata = res.data.data;
             _this.domain_list = rdata;

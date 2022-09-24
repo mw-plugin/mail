@@ -347,13 +347,14 @@ class App:
             str(start_pos) + ',' + str(_page['row'])).field('domain,a_record,created,active').select()
 
         for item in data_list:
+
             try:
                 if os.path.exists("/usr/bin/rspamd"):
                     self.set_rspamd_dkim_key(item['domain'])
                 if os.path.exists("/usr/sbin/opendkim"):
                     self._gen_dkim_key(item['domain'])
-            except:
-                return mw.returnJson(False, '请检查rspamd服务状态是否正常')
+            except Exception as e:
+                return mw.returnJson(False, '请检查rspamd服务状态是否正常' + str(e))
 
             if not os.path.exists(self.__session_conf):
                 self.__gevent_jobs(item['domain'], item['a_record'])

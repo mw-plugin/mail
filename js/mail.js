@@ -239,7 +239,7 @@ var mail  = {
         this.get_domain_list(obj, function (res) {
             console.log(res);
             var _tbody = '',
-            rdata = res.data.data;
+            var rdata = res.data.data;
             _this.domain_list = rdata
             if (rdata.length > 0) {
                 for (var i = 0; i < rdata.length; i++) {

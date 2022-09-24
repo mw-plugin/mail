@@ -344,10 +344,138 @@ class App:
         data_list = self.M('domain').order('created desc').limit(
             str(start_pos) + ',' + str(_page['row'])).field('domain,a_record,created,active').select()
 
-        # print(data)
-        # print(data_list)
+        for item in data_list:
+            try:
+                if os.path.exists("/usr/bin/rspamd"):
+                    self.set_rspamd_dkim_key(item['domain'])
+                if os.path.exists("/usr/sbin/opendkim"):
+                    self._gen_dkim_key(item['domain'])
+            except:
+                return mw.returnJson(False, '请检查rspamd服务状态是否正常')
+
+            if not os.path.exists(self.__session_conf):
+                self.__gevent_jobs(item['domain'], item['a_record'])
+                item = self.get_record_in_cache(item)
+            else:
+                item = self.get_record_in_cache(item)
+
+            item['mx_record'] = item['a_record']
+
+            item['dmarc_value'] = 'v=DMARC1;p=quarantine;rua=mailto:admin@{0}'.format(item[
+                                                                                      'domain'])
+            # item['ssl_status'] = self._get_multiple_certificate_domain_status(item[
+            #                                                                   'domain'])
+            item['catch_all'] = self._get_catchall_status(item['domain'])
+            item['ssl_info'] = self.get_ssl_info(item['domain'])
+
+        mw.writeFile(self.__session_conf, json.dumps(self._session))
 
         return mw.returnJson(True, 'ok', {'data': data_list, 'page': data['page']})
+
+    def _get_catchall_status(self, domain):
+        """
+            @name 获取某个域名下catchall是否开启
+            @param domain 需要捕获的域名
+        """
+        domain = '@' + domain.strip()
+        conf = mw.readFile(self.postfix_main_cf)
+        reg = r'virtual_alias_maps\s*=\s*sqlite:/etc/postfix/rule.cf'
+        if not conf:
+            return False
+        catchall_exist = re.search(reg, conf)
+        if not catchall_exist:
+            return False
+        result = self.M('alias').where('address=?', domain).select()
+        if result:
+            return True
+        return False
+
+    def _get_multiple_certificate_domain_status(self, domain):
+        path = '/www/server/mail/cert/{}/fullchain.pem'.format(
+            domain)
+        ssl_conf = mw.readFile('/etc/postfix/vmail_ssl.map')
+        if not os.path.exists(path):
+            return False
+        if not ssl_conf or domain not in ssl_conf:
+            return False
+        return True
+
+    def get_record_in_cache(self, item):
+        try:
+            item['mx_status'] = self._session['{0}:{1}'.format(item['domain'], 'MX')][
+                "status"]
+            item['spf_status'] = self._session['{0}:{1}'.format(item['domain'], 'TXT')][
+                "status"]
+            item['dkim_status'] = self._session['{0}:{1}'.format(
+                "default._domainkey." + item['domain'], 'TXT')]["status"]
+            item['dmarc_status'] = self._session['{0}:{1}'.format(
+                "_dmarc." + item['domain'], 'TXT')]["status"]
+            item['a_status'] = self._session['{0}:{1}'.format(item['a_record'], 'A')][
+                "status"]
+        except:
+            self.__gevent_jobs(item['domain'], item['a_record'])
+            self.get_record_in_cache(item)
+        return item
+
+    def _build_dkim_sign_content(self, domain, dkim_path):
+        dkim_signing_conf = """#{domain}_DKIM_BEGIN
+  {domain} {{
+    selectors [
+     {{
+       path: "{dkim_path}/default.private";
+       selector: "default"
+     }}
+   ]
+ }}
+#{domain}_DKIM_END
+""".format(domain=domain, dkim_path=dkim_path)
+        return dkim_signing_conf
+
+    def check_domain_in_rspamd_dkim_conf(self, domain):
+        sign_path = '/etc/rspamd/local.d/dkim_signing.conf'
+        sign_conf = public.readFile(sign_path)
+        if not sign_conf:
+            public.writeFile(
+                sign_conf, "#MW_DOMAIN_DKIM_BEGIN\n#MW_DOMAIN_DKIM_END")
+            sign_conf = """
+domain {
+#MW_DOMAIN_DKIM_BEGIN
+#MW_DOMAIN_DKIM_END
+}
+            """
+        rep = '#MW_DOMAIN_DKIM_BEGIN((.|\n)+)#MW_DOMAIN_DKIM_END'
+        sign_domain = re.search(rep, sign_conf)
+        if not sign_domain:
+            return False
+        if domain in sign_domain.group(1):
+            return False
+        return {"rep": rep, "sign_domain": sign_domain, 'sign_conf': sign_conf, 'sign_path': sign_path}
+
+    def _dkim_sign(self, domain, dkim_sign_content):
+        res = self.check_domain_in_rspamd_dkim_conf(domain)
+        if not res:
+            return False
+        sign_domain = '#MW_DOMAIN_DKIM_BEGIN{}#MW_DOMAIN_DKIM_END'.format(
+            res['sign_domain'].group(1) + dkim_sign_content)
+        sign_conf = re.sub(res['rep'], sign_domain, res['sign_conf'])
+        mw.writeFile(res['sign_path'], sign_conf)
+        return True
+
+    def set_rspamd_dkim_key(self, domain):
+        dkim_path = '/www/server/dkim/{}'.format(domain)
+        if not dkim_path:
+            os.makedirs(dkim_path)
+        if not os.path.exists('{}/default.pub'.format(dkim_path)):
+            dkim_shell = """
+    mkdir -p {dkim_path}
+    rspamadm dkim_keygen -s 'default' -b 1024 -d {domain} -k /www/server/dkim/{domain}/default.private > /www/server/dkim/{domain}/default.pub
+    chmod 755 -R /www/server/dkim/{domain}
+    """.format(dkim_path=dkim_path, domain=domain)
+            mw.execShell(dkim_shell)
+        dkim_sign_content = self._build_dkim_sign_content(domain, dkim_path)
+        if self._dkim_sign(domain, dkim_sign_content):
+            mw.execShell('systemctl reload rspamd')
+        return True
 
     def runLog(self):
         path = '/var/log/maillog'

@@ -598,11 +598,17 @@ domain {
                         value = str(j).strip()
 
             if value:
-                return True, {"status": 1, "v_time": now, "value": value}
-            return False, {"status": 0, "v_time": now, "value": error_ip}
+                self._session[key] = {"status": 1,
+                                      "v_time": now, "value": value}
+                return True
+
+            self._session[key] = {"status": 0,
+                                  "v_time": now, "value": error_ip}
+            return False
         except Exception as e:
-            raise e
-        return False, {"status": 0, "v_time": now, "value": error_ip}
+            self._session[key] = {"status": 0,
+                                  "v_time": now, "value": error_ip}
+            return False
 
     def flush_domain_record(self):
         '''

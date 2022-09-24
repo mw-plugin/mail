@@ -436,9 +436,9 @@ class App:
 
     def check_domain_in_rspamd_dkim_conf(self, domain):
         sign_path = '/etc/rspamd/local.d/dkim_signing.conf'
-        sign_conf = public.readFile(sign_path)
+        sign_conf = mw.readFile(sign_path)
         if not sign_conf:
-            public.writeFile(
+            mw.writeFile(
                 sign_conf, "#MW_DOMAIN_DKIM_BEGIN\n#MW_DOMAIN_DKIM_END")
             sign_conf = """
 domain {

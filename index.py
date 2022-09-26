@@ -427,25 +427,25 @@ class App:
             count = self.M('mailbox').where('domain=?', domain).count()
             pageArgs['count'] = int(count)
             # 获取分页数据
-            page_data = mw.getPage(pageArgs)
+            pageHtml = mw.getPage(pageArgs)
 
             start = (pageArgs['p'] - 1) * pageArgs['row']
 
             # 获取当前页的数据列表
-            data_list = self.M('mailbox').order('created desc').limit(start + ',' + pageArgs['row']).where(
+            data_list = self.M('mailbox').order('created desc').limit(str(start) + ',' + str(pageArgs['row'])).where(
                 'domain=?', domain).field('full_name,username,quota,created,modified,active,is_admin').select()
             # 返回数据到前端
-            return {'data': data_list, 'page': page_data}
+            return {'data': data_list, 'page': pageHtml}
         else:
             count = self.M('mailbox').count()
             pageArgs['count'] = int(count)
             # 获取分页数据
-            page_data = mw.getPage(pageArgs)
+            pageHtml = mw.getPage(pageArgs)
             # 获取当前页的数据列表
-            data_list = self.M('mailbox').order('created desc').limit(start + ',' + pageArgs[
-                'row']).field('full_name,username,quota,created,modified,active,is_admin').select()
+            data_list = self.M('mailbox').order('created desc').limit(str(start) + ',' + str(pageArgs[
+                'row'])).field('full_name,username,quota,created,modified,active,is_admin').select()
             # 返回数据到前端
-            return {'data': data_list, 'page': page_data}
+            return {'data': data_list, 'page': pageHtml}
 
     def add_mailbox(self):
         '''

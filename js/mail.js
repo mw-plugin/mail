@@ -85,7 +85,7 @@ var mail  = {
 
             layer.open({
                 type: 1,
-                title: '[' + domain + ']_用户管理',
+                title: '[' + domain + ']用户管理',
                 area: ['600px', '500px'],
                 closeBtn: 1,
                 content: '<div class="pd15 user_info">\

@@ -404,6 +404,101 @@ class App:
             # 返回数据到前端
             return {'data': data_list, 'page': page_data['page']}
 
+        # 检测密码强度
+    def __check_passwd(self, password):
+        return True if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$", password) and len(password) >= 8 else False
+
+    def __check_email_address(self, email_address):
+        return True if re.match(r"^\w+([.-]?\w+)*@.*", email_address) else False
+
+       # 生成MD5-CRYPT模式加密的密码
+    def __generate_crypt_passwd(self, password):
+        if sys.version_info[0] == 2:
+            shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(password)
+            return public.ExecShell(shell_str)[0][11:].strip()
+        else:
+            import crypt
+            return crypt.crypt(password, crypt.mksalt(crypt.METHOD_MD5))
+
+    # 加密数据
+    def __encode(self, data):
+        str2 = data.strip()
+        if sys.version_info[0] == 2:
+            b64_data = base64.b64encode(str2)
+        else:
+            b64_data = base64.b64encode(str2.encode('utf-8'))
+        return binascii.hexlify(b64_data).decode()
+
+    # 解密数据
+    def __decode(self, data):
+        b64_data = binascii.unhexlify(data.strip())
+        return base64.b64decode(b64_data).decode()
+
+    def add_mailbox(self):
+        '''
+        新增邮箱用户
+        :param args:
+        :return:
+        '''
+
+        args = self.getArgs()
+
+        if 'username' not in args:
+            return mw.returnJson(False, '请传入账号名')
+        if not self.__check_passwd(args.password):
+            return mw.returnJson(False, '密码强度不够(需要包括大小写字母和数字并且长度不小于8)')
+        username = args.username
+        if not self.__check_email_address(username):
+            return mw.returnJson(False, '邮箱地址格式不正确')
+        if not username.islower():
+            return mw.returnJson(False, '邮箱地址不能有大写字母！')
+        is_admin = args.is_admin if 'is_admin' in args else 0
+
+        # shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(args.password)
+        # password_encrypt = public.ExecShell(shell_str)[0][11:].strip()
+        password_encrypt = self.__generate_crypt_passwd(args.password)
+        password_encode = self.__encode(args.password)
+        local_part, domain = username.split('@')
+        domain_list = [item['domain']
+                       for item in self.M('domain').field('domain').select()]
+        if domain not in domain_list:
+            return mw.returnJson(False, '域名列表不存在域名{}'.format(domain))
+        num, unit = args.quota.split()
+        if unit == 'GB':
+            quota = float(num) * 1024 * 1024 * 1024
+        else:
+            quota = float(num) * 1024 * 1024
+
+        count = self.M('mailbox').where('username=?', (username,)).count()
+        if count > 0:
+            return mw.returnJson(False, '该邮箱地址已存在')
+
+        cur_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.M('mailbox').add('full_name,is_admin,username,password,password_encode,maildir,quota,local_part,domain,created,modified',
+                              (args.full_name, is_admin, username, password_encrypt, password_encode, args.username + '/', quota, local_part, domain, cur_time, cur_time))
+        # 在虚拟用户家目录创建对应邮箱的目录
+        user_path = '/www/vmail/{0}/{1}'.format(domain, local_part)
+        os.makedirs(user_path)
+        os.makedirs(user_path + '/tmp')
+        os.makedirs(user_path + '/new')
+        os.makedirs(user_path + '/cur')
+        public.ExecShell(
+            'chown -R vmail:mail /www/vmail/{0}/{1}'.format(domain, local_part))
+        self.create_mail_box(username, args.password)
+        return mw.returnJson(True, '增加邮箱用户[{0}]成功!'.format(username))
+
+    def create_mail_box(self, user, passwd):
+        try:
+            import imaplib
+            conn = imaplib.IMAP4(port=143, host='127.0.0.1')
+            conn.login(user, passwd)
+            conn.select('Junk')
+            conn.select('Trash')
+            conn.select('Drafts')
+            conn.close()
+        except:
+            return False
+
     def delete_mx_txt_cache(self):
         args = self.getArgs()
 
@@ -521,8 +616,8 @@ class App:
                 sign_conf, "#MW_DOMAIN_DKIM_BEGIN\n#MW_DOMAIN_DKIM_END")
             sign_conf = """
 domain {
-#MW_DOMAIN_DKIM_BEGIN
-#MW_DOMAIN_DKIM_END
+# MW_DOMAIN_DKIM_BEGIN
+# MW_DOMAIN_DKIM_END
 }
             """
         rep = '#MW_DOMAIN_DKIM_BEGIN((.|\n)+)#MW_DOMAIN_DKIM_END'

@@ -494,7 +494,7 @@ class App:
         os.makedirs(user_path + '/cur')
         public.ExecShell(
             'chown -R vmail:mail /www/vmail/{0}/{1}'.format(domain, local_part))
-        self.create_mail_box(username, args.password)
+        self.create_mail_box(username, args['password'])
         return mw.returnJson(True, '增加邮箱用户[{0}]成功!'.format(username))
 
     def create_mail_box(self, user, passwd):

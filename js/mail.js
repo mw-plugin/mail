@@ -60,8 +60,6 @@ var mail  = {
             var index = $(this).index();
             $(this).addClass('on').siblings().removeClass('on');
             $('.soft-man-con .task_block').eq(index).show().siblings().hide();
-            console.log(index);
-
 
             switch (index) {
                 case 0:
@@ -74,6 +72,88 @@ var mail  = {
         });
 
 
+        $('#domain_list').on('click', '.edit_ground_domain', function () {
+            var domain = $(this).attr('data-domain');
+            var index = $(this).attr('data-index');
+            var hostname = $(this).attr('data-hostname');
+            if (_this.domain_list[index].mx_status == 0 && _this.domain_list[index].mx_status == 0) {
+                layer.msg('当前域名未设置或暂未生效或记录多于一条', {
+                    icon: 0
+                })
+                return false;
+            }
+
+            layer.open({
+                type: 1,
+                title: '[' + domain + ']_用户管理',
+                area: ['900px', '720px'],
+                closeBtn: 2,
+                content: '<div class="pd15 user_info">\
+                            <button class="btn btn-sm btn-success mb15" style="margin-right:10px;" onclick="mail.edit_mailboxs_view(true)">添加用户</button>\
+                            <div class="member_table divtable">\
+                                <table class="table table-hover">\
+                                    <thead><tr><th>邮箱</th><th>姓名</th><th>邮箱容量</th><th>类型</th><th>状态</th><th style="text-align: right;">操作</th></tr></thead>\
+                                    <tbody id="mailboxs_list"></tbody>\
+                                </table>\
+                                <div class="page" id="mailboxs_page"></div>\
+                            </div>\
+                            <ul class="help-info-text c7 mlr20">\
+                                <li>注意事项:当前邮件服务器支持IMAP/POP3/SMTP/HTTP协议&nbsp;<a href="javascript:;" class="btlink open_btlink_down">下载HTTP-API文档</a>&nbsp;</li>\
+                                <li>POP服务【服务地址：<b>&nbsp;' + hostname + '&nbsp;</b>、端口：<b>&nbsp;110&nbsp;</b>】</li>\
+                                <li>IMAP服务【服务地址：<b>&nbsp;' + hostname + '&nbsp;</b>、端口：<b>&nbsp;143&nbsp;</b>】</li>\
+                                <li>SMTP服务【服务地址：<b>&nbsp;' + hostname + '&nbsp;</b>、端口：<b>&nbsp;25&nbsp;</b>】</li>\
+                            </ul>\
+                        </div>',
+                success: function () {
+                    $('.open_btlink_down').click(function () {
+                        window.open('/download?filename=' + encodeURIComponent('/www/server/mdserver-web/plugins/mail/static/api.zip'));
+                    });
+
+                    _this.create_mailboxs_list({
+                        domain: domain
+                    });
+                    $('#mailboxs_list').on('click', '.open-switch-active', function () {
+                        var checked = $(this).prop('checked');
+                        var index = $(this).attr('data-index');
+                        var _form = _this.mailboxs_list[index];
+                        var quota = _form.quota / 1024 / 1024;
+                        var unit = ' MB';
+                        if(quota > 1024) {
+                            quota = quota / 1024;
+                            unit = ' GB'
+                        }
+                        _this.updatae_mailboxs({
+                            quota: quota + unit,
+                            username: _form.username,
+                            password: _form.password,
+                            quote: _form.quote,
+                            full_name: _form.full_name,
+                            active: checked ? 1 : 0,
+                            is_admin: _form.is_admin
+                        }, function (res) {
+                            layer.msg(res.msg, {icon: 1});
+                        });
+                    });
+                    $('#mailboxs_list').on('click', '.edit_mailboxs', function () {
+                        var _index = $(this).attr('data-index');
+                        var _form = _this.mailboxs_list[_index];
+                        _this.edit_mailboxs_view(false, _form);
+                    });
+                    $('#mailboxs_list').on('click', '.del_mailboxs', function () {
+                        var username = $(this).attr('data-username');
+                        layer.confirm('是否删除【' + username + '】成员', {icon: 0,closeBtn: 2,title: '删除成员'}, function (index) {
+                            _this.del_mailboxs({username: username}, function (res) {
+                                _this.create_mailboxs_list({
+                                    domain: domain
+                                }, function () {
+                                    layer.msg(res.msg, {icon: 1});
+                                });
+                            });
+                        });
+                    });
+                }
+            });
+        });
         
 
         console.log(_this);
@@ -291,7 +371,7 @@ var mail  = {
             $('#domain_page a').click(function (e) {
                 _this.create_domain_list({
                     page: $(this).attr('href').split('p=')[1],
-                    size: 10
+                    size: 10,
                 })
                 e.stopPropagation();
                 e.preventDefault();
@@ -325,6 +405,23 @@ var mail  = {
                 });
             });
             if (callback) callback(res);
+        });
+    },
+
+    // 获取邮箱用户列表_请求
+    get_mailboxs_list: function (obj, callback) {
+        this.send({
+            tips: '正在获取用户列表,请稍后...',
+            method: 'get_mailboxs',
+            data: {
+                domain: obj.domain || '',
+                p: obj.p || 1,
+                size: obj.size || 10
+            },
+            check: true,
+            success: function (res) {
+                if (callback) callback(res);
+            }
         });
     },
 

@@ -434,8 +434,7 @@ class App:
             # 获取当前页的数据列表
             dlist = self.M('mailbox').order('created desc').limit(str(start) + ',' + str(pageArgs['row'])).where(
                 'domain=?', (domain,)).field('full_name,username,quota,created,modified,active,is_admin').select()
-            # 返回数据到前端
-            return {'data': dlist, 'page': pageHtml}
+
         else:
             count = self.M('mailbox').count()
             pageArgs['count'] = int(count)
@@ -444,8 +443,8 @@ class App:
             # 获取当前页的数据列表
             dlist = self.M('mailbox').order('created desc').limit(str(start) + ',' + str(pageArgs[
                 'row'])).field('full_name,username,quota,created,modified,active,is_admin').select()
-            # 返回数据到前端
-            return {'data': dlist, 'page': pageHtml}
+
+        return mw.returnJson(True, 'ok', {'data': data_list, 'page': pageHtml})
 
     def add_mailbox(self):
         '''

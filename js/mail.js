@@ -163,6 +163,8 @@ var mail  = {
     create_mailboxs_list: function (obj, callback) {
         var _this = this;
         this.get_mailboxs_list(obj, function (res) {
+            console.log('create_mailboxs_list:',res);
+
             var _tbody = '',
                 rdata = res.data;
             _this.mailboxs_list = rdata

@@ -455,8 +455,6 @@ class App:
             return mw.returnJson(False, '邮箱地址不能有大写字母！')
         is_admin = args['is_admin'] if 'is_admin' in args else 0
 
-        # shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(args.password)
-        # password_encrypt = public.ExecShell(shell_str)[0][11:].strip()
         password_encrypt = self.__generate_crypt_passwd(args.password)
         password_encode = self.__encode(args.password)
         local_part, domain = username.split('@')

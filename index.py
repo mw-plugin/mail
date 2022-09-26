@@ -453,7 +453,7 @@ class App:
             return mw.returnJson(False, '邮箱地址格式不正确')
         if not username.islower():
             return mw.returnJson(False, '邮箱地址不能有大写字母！')
-        is_admin = args.is_admin if 'is_admin' in args else 0
+        is_admin = args['is_admin'] if 'is_admin' in args else 0
 
         # shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(args.password)
         # password_encrypt = public.ExecShell(shell_str)[0][11:].strip()

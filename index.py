@@ -415,11 +415,19 @@ class App:
         p = int(args['p']) if 'p' in args else 1
         rows = int(args['size']) if 'size' in args else 12
         callback = args['callback'] if 'callback' in args else ''
+
+        pageArgs = {}
+
+        pageArgs['p'] = p
+        pageArgs['row'] = rows
+        pageArgs['tojs'] = 'get_mailboxs'
+
         if 'domain' in args:
             domain = args['domain']
             count = self.M('mailbox').where('domain=?', domain).count()
+            pageArgs['count'] = count
             # 获取分页数据
-            page_data = mw.getPage(count, p, rows, callback)
+            page_data = mw.getPage(pageArgs)
             # 获取当前页的数据列表
             data_list = self.M('mailbox').order('created desc').limit(page_data['shift'] + ',' + page_data['row']).where(
                 'domain=?', domain).field('full_name,username,quota,created,modified,active,is_admin').select()
@@ -427,8 +435,9 @@ class App:
             return {'data': data_list, 'page': page_data['page']}
         else:
             count = self.M('mailbox').count()
+            pageArgs['count'] = count
             # 获取分页数据
-            page_data = mw.getPage(count, p, rows, callback)
+            page_data = mw.getPage(pageArgs)
             # 获取当前页的数据列表
             data_list = self.M('mailbox').order('created desc').limit(page_data['shift'] + ',' + page_data[
                 'row']).field('full_name,username,quota,created,modified,active,is_admin').select()

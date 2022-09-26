@@ -418,8 +418,8 @@ class App:
 
         pageArgs = {}
 
-        pageArgs['p'] = p
-        pageArgs['row'] = rows
+        pageArgs['p'] = int(p)
+        pageArgs['row'] = int(rows)
         pageArgs['tojs'] = 'get_mailboxs'
 
         if 'domain' in args:

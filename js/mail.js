@@ -165,8 +165,8 @@ var mail  = {
         this.get_mailboxs_list(obj, function (res) {
             console.log('create_mailboxs_list:',res);
 
-            var _tbody = '',
-                rdata = res.data;
+            var _tbody = '';
+            var rdata = res.data;
             _this.mailboxs_list = rdata
             _this._domain_name = obj.domain;
             if (rdata.length > 0) {
@@ -190,7 +190,7 @@ var mail  = {
             $('#mailboxs_page a').click(function (e) {
                 _this.create_mailboxs_list({
                     domain: _this._domain_name,
-                    p: $(this).attr('href').split('p=')[1]
+                    p: $(this).attr('href').split('p=')[1],
                 })
                 e.stopPropagation();
                 e.preventDefault();

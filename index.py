@@ -411,14 +411,15 @@ class App:
         :param args:
         :return:
         '''
-        p = int(args.p) if 'p' in args else 1
-        rows = int(args.size) if 'size' in args else 12
-        callback = args.callback if 'callback' in args else ''
+        args = self.getArgs()
+        p = int(args['p']) if 'p' in args else 1
+        rows = int(args['size']) if 'size' in args else 12
+        callback = args['callback'] if 'callback' in args else ''
         if 'domain' in args:
-            domain = args.domain
+            domain = args['domain']
             count = self.M('mailbox').where('domain=?', domain).count()
             # 获取分页数据
-            page_data = public.get_page(count, p, rows, callback)
+            page_data = mw.getPage(count, p, rows, callback)
             # 获取当前页的数据列表
             data_list = self.M('mailbox').order('created desc').limit(page_data['shift'] + ',' + page_data['row']).where(
                 'domain=?', domain).field('full_name,username,quota,created,modified,active,is_admin').select()
@@ -427,7 +428,7 @@ class App:
         else:
             count = self.M('mailbox').count()
             # 获取分页数据
-            page_data = public.get_page(count, p, rows, callback)
+            page_data = mw.getPage(count, p, rows, callback)
             # 获取当前页的数据列表
             data_list = self.M('mailbox').order('created desc').limit(page_data['shift'] + ',' + page_data[
                 'row']).field('full_name,username,quota,created,modified,active,is_admin').select()

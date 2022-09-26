@@ -405,7 +405,7 @@ class App:
 
         return mw.returnJson(True, 'ok', {'data': data_list, 'page': data['page']})
 
-    def get_mailboxs(self, args):
+    def get_mailboxs(self):
         '''
         邮箱用户查询接口
         :param args:

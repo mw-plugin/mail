@@ -425,7 +425,7 @@ class App:
         if 'domain' in args:
             domain = args['domain']
             count = self.M('mailbox').where('domain=?', domain).count()
-            pageArgs['count'] = count
+            pageArgs['count'] = int(count)
             # 获取分页数据
             page_data = mw.getPage(pageArgs)
             # 获取当前页的数据列表
@@ -435,7 +435,7 @@ class App:
             return {'data': data_list, 'page': page_data['page']}
         else:
             count = self.M('mailbox').count()
-            pageArgs['count'] = count
+            pageArgs['count'] = int(count)
             # 获取分页数据
             page_data = mw.getPage(pageArgs)
             # 获取当前页的数据列表

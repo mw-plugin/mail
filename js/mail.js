@@ -167,7 +167,7 @@ var mail  = {
 
             var _tbody = '';
             var rdata = res.data;
-            _this.mailboxs_list = rdata
+            _this.mailboxs_list = rdata;
             _this._domain_name = obj.domain;
             if (rdata.length > 0) {
                 for (var i = 0; i < rdata.length; i++) {

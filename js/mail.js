@@ -86,7 +86,7 @@ var mail  = {
             layer.open({
                 type: 1,
                 title: '[' + domain + ']_用户管理',
-                area: ['900px', '720px'],
+                area: ['500px', '720px'],
                 closeBtn: 2,
                 content: '<div class="pd15 user_info">\
                             <button class="btn btn-sm btn-success mb15" style="margin-right:10px;" onclick="mail.edit_mailboxs_view(true)">添加用户</button>\
@@ -157,6 +157,44 @@ var mail  = {
         
 
         console.log(_this);
+    },
+
+    // 创建邮件用户列表 -方法
+    create_mailboxs_list: function (obj, callback) {
+        var _this = this;
+        this.get_mailboxs_list(obj, function (res) {
+            var _tbody = '',
+                rdata = res.data;
+            _this.mailboxs_list = rdata
+            _this._domain_name = obj.domain;
+            if (rdata.length > 0) {
+                for (var i = 0; i < rdata.length; i++) {
+                    var quota_size = (rdata[i].quota / 1024 / 1024 / 1024) < 1 ? (rdata[i].quota /
+                        1024 / 1024) + 'MB' : (rdata[i].quota / 1024 / 1024 / 1024) + 'GB';
+                    _tbody += '<tr><td>' + rdata[i].username + '</td><td>' + rdata[i].full_name +
+                        '</td><td>' + quota_size + '</td><td>' + (!rdata[i].is_admin ? '普通用户' :
+                            '管理员') +
+                        '</td><td><div class="index-item"><input class="btswitch btswitch-ios open-switch-active" id="is_active_' +
+                        i + '" type="checkbox" ' + (rdata[i].active == 1 ? "checked" : "") +
+                        ' data-index="' + i + '"><label class="btswitch-btn" for="is_active_' + i +
+                        '"></label></div></td><td style="text-align: right;"><a href="javascript:;" class="btlink edit_mailboxs" data-index="' +
+                        i +
+                        '">编辑</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:;" class="btlink red del_mailboxs" data-username="' +
+                        rdata[i].username + '">删除</a></td></tr>';
+                };
+            }
+            $('#mailboxs_list').html(_tbody);
+            $('#mailboxs_page').html(res.page);
+            $('#mailboxs_page a').click(function (e) {
+                _this.create_mailboxs_list({
+                    domain: _this._domain_name,
+                    p: $(this).attr('href').split('p=')[1]
+                })
+                e.stopPropagation();
+                e.preventDefault();
+            })
+            if (callback) callback(res);
+        });
     },
 
     // 编辑添加邮箱用户视图-方法

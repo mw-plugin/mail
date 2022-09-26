@@ -444,7 +444,7 @@ class App:
             dlist = self.M('mailbox').order('created desc').limit(str(start) + ',' + str(pageArgs[
                 'row'])).field('full_name,username,quota,created,modified,active,is_admin').select()
 
-        return mw.returnJson(True, 'ok', {'data': data_list, 'page': pageHtml})
+        return mw.returnJson(True, 'ok', {'data': dlist, 'page': pageHtml})
 
     def add_mailbox(self):
         '''

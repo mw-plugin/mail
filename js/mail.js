@@ -86,7 +86,7 @@ var mail  = {
             layer.open({
                 type: 1,
                 title: '[' + domain + ']_用户管理',
-                area: ['500px', '720px'],
+                area: ['600px', '500px'],
                 closeBtn: 2,
                 content: '<div class="pd15 user_info">\
                             <button class="btn btn-sm btn-success mb15" style="margin-right:10px;" onclick="mail.edit_mailboxs_view(true)">添加用户</button>\

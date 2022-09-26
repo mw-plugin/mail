@@ -288,6 +288,36 @@ class App:
 
         return True
 
+    # 检测密码强度
+    def __check_passwd(self, password):
+        return True if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$", password) and len(password) >= 8 else False
+
+    def __check_email_address(self, email_address):
+        return True if re.match(r"^\w+([.-]?\w+)*@.*", email_address) else False
+
+    # 生成MD5-CRYPT模式加密的密码
+    def __generate_crypt_passwd(self, password):
+        if sys.version_info[0] == 2:
+            shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(password)
+            return public.ExecShell(shell_str)[0][11:].strip()
+        else:
+            import crypt
+            return crypt.crypt(password, crypt.mksalt(crypt.METHOD_MD5))
+
+    # 加密数据
+    def __encode(self, data):
+        str2 = data.strip()
+        if sys.version_info[0] == 2:
+            b64_data = base64.b64encode(str2)
+        else:
+            b64_data = base64.b64encode(str2.encode('utf-8'))
+        return binascii.hexlify(b64_data).decode()
+
+    # 解密数据
+    def __decode(self, data):
+        b64_data = binascii.unhexlify(data.strip())
+        return base64.b64decode(b64_data).decode()
+
     def getInitDFile(self):
         if app_debug:
             return '/tmp/' + getPluginName()
@@ -403,36 +433,6 @@ class App:
                 'row']).field('full_name,username,quota,created,modified,active,is_admin').select()
             # 返回数据到前端
             return {'data': data_list, 'page': page_data['page']}
-
-        # 检测密码强度
-    def __check_passwd(self, password):
-        return True if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$", password) and len(password) >= 8 else False
-
-    def __check_email_address(self, email_address):
-        return True if re.match(r"^\w+([.-]?\w+)*@.*", email_address) else False
-
-       # 生成MD5-CRYPT模式加密的密码
-    def __generate_crypt_passwd(self, password):
-        if sys.version_info[0] == 2:
-            shell_str = 'doveadm pw -s MD5-CRYPT -p {0}'.format(password)
-            return public.ExecShell(shell_str)[0][11:].strip()
-        else:
-            import crypt
-            return crypt.crypt(password, crypt.mksalt(crypt.METHOD_MD5))
-
-    # 加密数据
-    def __encode(self, data):
-        str2 = data.strip()
-        if sys.version_info[0] == 2:
-            b64_data = base64.b64encode(str2)
-        else:
-            b64_data = base64.b64encode(str2.encode('utf-8'))
-        return binascii.hexlify(b64_data).decode()
-
-    # 解密数据
-    def __decode(self, data):
-        b64_data = binascii.unhexlify(data.strip())
-        return base64.b64decode(b64_data).decode()
 
     def add_mailbox(self):
         '''
